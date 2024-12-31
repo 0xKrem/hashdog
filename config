@@ -1,6 +1,6 @@
 # Gui settings
 gui.mode="dark"#comment
-gui.info=false
+gui.verbose=false
 
 # Attack settings
 attack.mode="dict"
@@ -15,4 +15,4 @@ bruteforce.charset="nlu"
 
 # Default paths
 path.wordlist="wordlists/rockyou.txt"
-path.output="."
+path.logs="log/"
