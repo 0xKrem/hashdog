@@ -10,5 +10,5 @@ partial reimplementation of Hashcat with a GUI
 
 ## build
 ```
-gcc $(pkg-config --cflags gtk4) -o interface_graphique interface_graphique.c $(pkg-config --libs gtk4)
+gcc -o hashdog backend.c config.c main.c $(pkg-config --cflags --libs gtk4 openssl)
 ```
