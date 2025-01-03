@@ -1,6 +1,5 @@
 #include <gtk/gtk.h>
-#include "backend.h"
-#include "config.h"
+#include "functions.h"
 
 // Déclaration de la fonction on_resolve_button_clicked
 static void on_resolve_button_clicked(GtkWidget *widget, gpointer data);

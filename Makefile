@@ -1,8 +1,11 @@
 NAME    =   hashdog
 
-SRC     =   main.c				\
-			functions/backend.c \
-            functions/config.c	\
+SRC     =   main.c					\
+			functions/arguments.c	\
+			functions/bruteforce.c	\
+			functions/checkDigest.c	\
+			functions/dictAtk.c		\
+			functions/config.c
 
 OBJ     =   $(SRC:.c=.o)
 
