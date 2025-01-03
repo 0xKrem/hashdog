@@ -1,24 +1,24 @@
 NAME    =   hashdog
 
-SRC     =   backend.c       \
-            config.c        \
-            main.c
+SRC     =   main.c				\
+			functions/backend.c \
+            functions/config.c	\
 
 OBJ     =   $(SRC:.c=.o)
 
 CFLAGS  =   -Wall -Wextra -iquote include $(shell pkg-config --cflags gtk4 openssl)
 LDFLAGS =   $(shell pkg-config --libs gtk4 openssl)
 
-all:    $(NAME)
+all:		$(NAME)
 
-$(NAME):    $(OBJ)
-	@gcc -o $(NAME) $(OBJ) $(CFLAGS) $(LDFLAGS)
+$(NAME):	$(OBJ)
+			@gcc -o $(NAME) $(OBJ) $(CFLAGS) $(LDFLAGS)
 
 clean:
-	@rm -f $(OBJ)
+			@rm -f $(OBJ)
 
-fclean: clean
-	@rm -f $(NAME)
+fclean: 	clean
+			@rm -f $(NAME)
 
-re: fclean all
+re: 		fclean all
 
