@@ -321,9 +321,9 @@ int main(int argc, char **argv) {
 		fclose(config);
 		return 1;
 	}
-	printParams(params, *nv);
+	// printParams(params, *nv);
 
-	printf("oui oui : %s\n", queryConfig(params, *nv, "path.wordlist"));
+	printf("test : %d\n", *(int*)queryConfig(params, *nv, "bruteforce.length.max"));
 
 	app = gtk_application_new("com.example.HashResolver", G_APPLICATION_DEFAULT_FLAGS);
 	g_signal_connect(app, "activate", G_CALLBACK(on_app_activate), NULL);

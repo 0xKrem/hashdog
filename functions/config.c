@@ -8,6 +8,8 @@ int storeParams(char* key, char* value, char*** params, unsigned int len);
 char** allocateParam(char** paramList, unsigned int len);
 void printParams(char*** params, unsigned int len);
 char* stringVerify(char* value);
+void* queryConfig(char*** params, unsigned int len, char* key);
+int strToInt(char *str, int* num);
 
 /*
  * Input : config file as a stream
@@ -109,7 +111,6 @@ char*** configParser(FILE* config, unsigned int* nv) {
 		}
 
 	}
-	// printParams(params, *nv); // debug
 
 	free(key);
 	free(keyChars);
@@ -260,17 +261,89 @@ char** allocateParam(char** paramList, unsigned int len) {
 
 }
 
-void printParams(char*** params, unsigned int len) {
-	for (unsigned int i = 0; i < len; ++i) {
-		printf("%s = %s\n", params[0][i], params[1][i]);
-	}
-}
+// void printParams(char*** params, unsigned int len) {
+// 	char* key;
+// 	char* val;
+//
+// 	if (params == NULL || len == 0) {
+// 		return;
+// 	}
+//
+// 	for (int i = 0; i < len; ++i) {
+// 		key = params[0][i];
+// 		val = params[1][i];
+//
+// 		// strings
+// 		if (strncmp(val, "s:", 2) == 0) {
+// 			printf("%s : %s (string)\n", key, queryConfig(params, len, key));
+// 		}
+//
+// 		// integers
+// 		else if (strncmp(val, "i:", 2) == 0) {
+// 			printf("%s : %i (integer)\n", key, *queryConfig(params, len, key));
+// 		}
+//
+// 		else if (strncmp(val, "b:", 2) == 0) {
+// 			printf("%s : %i (boolean)\n", key, *queryConfig(params, len, key));
+// 		}
+// 	}
+// 	return;
+// }
 
-char* queryConfig(char*** params, unsigned int len, char* key) {
-	for (unsigned int i = 0; i < len; ++i) {
+/* Purpose: Searches for values
+ * 			Dynamically converts values to appropriates data types
+*/
+void* queryConfig(char*** params, unsigned int len, char* key) {
+	unsigned int i;
+	int* pInt = malloc(sizeof(int));
+
+	if (params == NULL || key == NULL) {
+		return NULL;
+	}
+	for (i = 0; i < len; ++i) {
 		if (strcmp(params[0][i], key) == 0) {
-			return params[1][i];
+
+			// strings
+			if (strncmp(params[1][i], "s:", 2) == 0) {
+				return params[1][i] + 2;
+			}
+			// integers
+			else if (strncmp(params[1][i], "i:", 2) == 0) {
+
+				if (strToInt(params[1][i] + 2, pInt) == 0) {
+					return pInt;
+				}
+			}
+			else if (strncmp(params[1][i], "b:", 2) == 0) {
+				if (strcmp(params[1][i] + 2, "true") == 0 ) {
+					*pInt = 1;
+					return pInt;
+				} else if (strcmp(params[1][i] + 2, "false") == 0 ) {
+					*pInt = 0;
+					return pInt;
+				}
+			}
 		}
 	}
 	return NULL;
+}
+
+int strToInt(char *str, int* num) {
+    char *endptr;
+	int result;
+
+	// check string
+    if (str == NULL || *str == '\0') {
+        return 1;
+    }
+
+    result = (int) strtol(str, &endptr, 10); // 10 = base 10 convertion 
+
+	// if convertion stopped before the end of the string
+    if (*endptr != '\0') {
+        return 1;
+    }
+
+    *num = result;
+    return 0;
 }

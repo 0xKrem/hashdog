@@ -16,7 +16,7 @@ int fallbackToConfig(char args[], char** argValues, char*** params, unsigned int
 // 'config.c'
 char*** configParser(FILE* config, unsigned int* nv);
 void printParams(char*** params, unsigned int len);
-char* queryConfig(char*** params, unsigned int len, char* key);
+void* queryConfig(char*** params, unsigned int len, char* key);
 
 // macros
 #define RESET "\x1b[0m"
