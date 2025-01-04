@@ -49,6 +49,7 @@ char*** configParser(FILE* config, unsigned int* nv) {
 	// creating value charset
 	strcpy(valueChars, alpha);
 	strcat(valueChars, nums);
+	strcat(valueChars, ":");
 	strcat(valueChars, "\\./\"");
 
 	while(fgets(line, len, config)) {
@@ -158,25 +159,59 @@ char* cleanValue(char* value) {
 	return buff;
 }
 
+/* Purpose : this functions edits the value for later use
+ * 			 strings and integers are appended a specific prefix
+ * 			 this allows for dynamic type conversion at runtime
+ */
 char* stringVerify(char* value) {
 	int i;
 
-	// check if str start with quote
-	if (value[0] != '"') {
-		return value;
+	// allocating the value + type encoding
+	char* strPrefix = "s:";
+	char* intPrefix = "i:";
+	char* boolPrefix = "b:";
+	char* newValue = malloc(sizeof(char) * (strlen(value) + 2));
+
+	if (newValue == NULL) {
+		printf("Memory allocation failed\n");
+		exit(1);
 	}
 
-	// check if str ends with quote
-	if (value[strlen(value) - 1] != '"') {
-		return NULL;
+	// encoding strings
+	if (value[0] == '"') {
+		strcpy(newValue, strPrefix);
+
+		// if strings doesnt end with quote
+		if (value[strlen(value) - 1] != '"') {
+			free(newValue);
+			return NULL;
+		}
+
+		// remove quotes
+		for (i = 0; i < strlen(value) - 1; ++i) {
+			value[i] = value[i+1];
+		}
+
+		value[strlen(value) - 2] = '\0'; // delete ending quote
+		strcat(newValue, value);
+		return newValue;
 	}
 
-	// remove quotes
-	for (i = 0; i < strlen(value) - 1; ++i) {
-		value[i] = value[i+1];
+	// encoding integers
+	if (value[0] >= '0' && value[0] <= '9') {
+		strcpy(newValue, intPrefix);
+		strcat(newValue, value);
+		return newValue;
 	}
-	value[strlen(value) - 2] = '\0';
-	return value;
+
+	// booleans
+	if (strcmp(value, "true") == 0 || strcmp(value, "false") == 0) {
+		strcpy(newValue, boolPrefix);
+		strcat(newValue, value);
+		return newValue;
+	}
+	return NULL;
+
 }
 
 /* Purpose : dynamically building 2 arrays of strings to store key/value pair

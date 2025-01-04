@@ -299,8 +299,34 @@ int main(int argc, char **argv) {
     GtkApplication *app;
     int status;
 
-    app = gtk_application_new("com.example.HashResolver", G_APPLICATION_DEFAULT_FLAGS);
-    g_signal_connect(app, "activate", G_CALLBACK(on_app_activate), NULL);
+	char*** params; // hold the config and current args
+
+	unsigned int* nv = malloc(sizeof(int)); // number of params
+	if (nv == NULL) {
+		printf("Error: Memory allocation failed\n");
+		exit(1);
+	}
+
+	// initializing config-file
+	FILE* config = fopen("config", "r");
+
+	if (config == NULL) {
+		printf("Error: No config file found\n");
+		exit(1);
+	}
+
+	// initializing params from config-file
+	params = configParser(config, nv);
+	if (params == NULL) {
+		fclose(config);
+		return 1;
+	}
+	printParams(params, *nv);
+
+	printf("oui oui : %s\n", queryConfig(params, *nv, "path.wordlist"));
+
+	app = gtk_application_new("com.example.HashResolver", G_APPLICATION_DEFAULT_FLAGS);
+	g_signal_connect(app, "activate", G_CALLBACK(on_app_activate), NULL);
 
     // Ajouter le CSS pour personnaliser le bouton
     GtkCssProvider *provider = gtk_css_provider_new();
@@ -314,6 +340,17 @@ int main(int argc, char **argv) {
 
     status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);
+
+	fclose(config);
+
+	//free params
+	for (unsigned int i = 0; i < *nv; i++) {
+		free(params[0][i]);
+	}
+	free(params[0]);
+	free(params[1]);
+	free(params);
+	free(nv);
 
     return status;
 }
