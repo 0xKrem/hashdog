@@ -2,6 +2,7 @@
 partial reimplementation of Hashcat with a GUI
 
 # Compiling
+<<<<<<< HEAD
 - a Makefile is used to compile the project. Just run :
 ```
 make
@@ -28,3 +29,17 @@ make
     -x 8         \
     -p d6710209b8fed4d12f7c305d4a68c3a1a1f327ae2037b9c9c2983aea5ce7cad4
 ```
+=======
+## install dependencies
+
+| Distribution   | Binary package | Development package |
+|----------------|----------------|----------------------|
+| Debian/Ubuntu  | libgtk-4-1     | libgtk-4-dev         |
+| Fedora         | gtk4           | gtk4-devel           |
+
+## build
+- use the makefile, simply run :
+```
+make
+```
+>>>>>>> dbc4c29506f54b019524cdf595c5b7ab00ccfadd
